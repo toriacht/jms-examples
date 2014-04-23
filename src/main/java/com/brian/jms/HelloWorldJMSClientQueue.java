@@ -14,8 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.as.quickstarts.jms;
+package com.brian.jms;
 
+import EDU.oswego.cs.dl.util.concurrent.CountDown;
+
+import java.util.Calendar;
 import java.util.logging.Logger;
 import java.util.Properties;
 
@@ -31,6 +34,8 @@ public class HelloWorldJMSClientQueue {
     private static final String DEFAULT_MESSAGE = "Hello, World!";
     private static final String DEFAULT_CONNECTION_FACTORY = "jms/RemoteConnectionFactory";
     private static final String DEFAULT_DESTINATION = "jms/queue/test";
+    private static final String DEFAULT_TOPIC = "jms/topic/testTopic";
+
     private static final String DEFAULT_MESSAGE_COUNT = "1";
 //    private static final String DEFAULT_USERNAME = "quickstartUser";
 //    private static final String DEFAULT_PASSWORD = "quickstartPwd1!";
@@ -38,6 +43,8 @@ public class HelloWorldJMSClientQueue {
     private static final String DEFAULT_PASSWORD = "Passw0rd!";
     private static final String INITIAL_CONTEXT_FACTORY = "org.jboss.naming.remote.client.InitialContextFactory";
     private static final String PROVIDER_URL = "remote://localhost:4447";
+
+    static CountDown done = new CountDown(1);
 
     public static void main(String[] args) throws Exception {
 
@@ -62,7 +69,7 @@ public class HelloWorldJMSClientQueue {
             env.put(Context.SECURITY_CREDENTIALS, System.getProperty("password", DEFAULT_PASSWORD));
             context = new InitialContext(env);
 
-            sendAndReceiveMessageOnQueue(connectionFactory, context);
+//            sendAndReceiveMessageOnQueue(connectionFactory, context);
 
             publishAndReciveMessageOnTopic(connectionFactory, context);
 
@@ -89,24 +96,75 @@ public class HelloWorldJMSClientQueue {
 
 
 
-    public static void setupPubSub(ConnectionFactory connectionFactory, Context contex)
+    public static void setupPubSub(ConnectionFactory connectionFactory, Context context)
             throws JMSException, NamingException
     {
 
-        Connection connection = null;
+        TopicConnection topicConn = null;
 
-        InitialContext iniCtx = new InitialContext();
-        log.info("init lookup...");
-        Object tmp = iniCtx.lookup("ConnectionFactory");
-        log.info("Topic Conn F");
-        TopicConnectionFactory tcf = (TopicConnectionFactory) tmp;
+       // InitialContext iniCtx = new InitialContext();
+       // log.info("init lookup...");
+       // Object tmp = iniCtx.lookup("ConnectionFactory");
+       // log.info("Topic Conn F");
+        // Perform the JNDI lookups
+
+        String connectionFactoryString = System.getProperty("connection.factory", DEFAULT_CONNECTION_FACTORY);
+        log.info("Attempting to acquire connection factory \"" + connectionFactoryString + "\"");
+        connectionFactory = (ConnectionFactory) context.lookup(connectionFactoryString);
+        log.info("Found connection factory \"" + connectionFactoryString + "\" in JNDI");
+
+        TopicConnectionFactory tcf = (TopicConnectionFactory) connectionFactory;
+        log.info("TopicConnectionFactory created: "+tcf);
+        topicConn = tcf.createTopicConnection(System.getProperty("username", DEFAULT_USERNAME), System.getProperty("password", DEFAULT_PASSWORD));
+        log.info("Topic Connection created: "+topicConn );
+
+        String topicString = System.getProperty("topic", DEFAULT_TOPIC);
+        log.info("Attempting to acquire topic \"" + topicString + "\"");
+        Topic topic= (Topic) context.lookup(topicString);
+        log.info("Found topic \"" + topicString + "\" in JNDI");
+        log.info("Attempting to create topic session ");
+        TopicSession session = topicConn.createTopicSession(false,
+                TopicSession.AUTO_ACKNOWLEDGE);
+        log.info("Attempting to start topic connection ");
+        topicConn.start();
+        log.info("Success connection started...");
+        log.info("Attempting to create subscriber...");
+        TopicSubscriber recv = session.createSubscriber(topic);
+        log.info("Success subscriber created..");
+        log.info("Attempting to set message listener...");
+        recv.setMessageListener(new ExListener());
+        log.info("Success");
+
+        sendMessage("Test topic message "+ Calendar.getInstance().getTime().toString(),session,topic);
 
 
-        TopicConnection conn = tcf.createTopicConnection();
-        Topic topic = (Topic) iniCtx.lookup("topic/testTopic");
-        TopicSession session = conn.createTopicSession(false,TopicSession.AUTO_ACKNOWLEDGE);
 
-        conn.start();
+
+
+
+
+
+
+    }
+
+    private static void sendMessage(String text, TopicSession session, Topic topic) {
+
+        // Send a text msg
+        TopicPublisher send = null;
+        try {
+            send = session.createPublisher(topic);
+
+            TextMessage tm = session.createTextMessage(text);
+            log.info("Publishing message, sent text=" + tm.getText());
+            send.publish(tm);
+            log.info("Message Published" );
+            send.close();
+            log.info("Publisher closed");
+        } catch (JMSException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+
     }
 
     /**
@@ -176,5 +234,24 @@ public class HelloWorldJMSClientQueue {
             }
         }
     }
+
+    public static class ExListener implements MessageListener
+    {
+
+
+        public void onMessage(Message msg)
+        {
+            log.info("Listener activated ");
+            done.release();
+            TextMessage tm = (TextMessage) msg;
+            try {
+                log.info("Message received on topic, topic message: " + tm.getText());
+            } catch(Throwable t) {
+                t.printStackTrace();
+            }
+        }
+    }
+
+
 }
 

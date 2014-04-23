@@ -80,7 +80,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>${version.exec.plugin}</version>
                 <configuration>
-                    <mainClass>org.jboss.as.quickstarts.jms.HelloWorldJMSClientQueue</mainClass>
+                    <mainClass>com.brian.jms.HelloWorldJMSClientQueue</mainClass>
                     <!--<mainClass>org.jboss.as.quickstarts.jms.TopicSendRecvClient</mainClass>-->
                     <systemProperties>
                         <!-- Override the default values of properties passed to the HelloWorldJMSClientQueue -->
