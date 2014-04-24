@@ -19,12 +19,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.jboss.quickstarts.eap</groupId>
-    <artifactId>jboss-helloworld-jms</artifactId>
+    <groupId>com.brian.jms.examples</groupId>
+    <artifactId>jboss-jms-queue-topic-examples</artifactId>
     <version>6.2.0.GA</version>
     <packaging>jar</packaging>
-    <name>JBoss EAP Quickstart: helloworld-jms</name>
-    <description>helloworld-jms: Helloworld JMS external producer/consumer client</description>
+    <name>JMS examples</name>
+    <description>JMS examples based on Jboss quickstarts and docs</description>
 
     <url>http://jboss.org/jbossas</url>
     <licenses>
@@ -80,10 +80,10 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>${version.exec.plugin}</version>
                 <configuration>
-                    <mainClass>com.brian.jms.HelloWorldJMSClientQueue</mainClass>
+                    <mainClass>com.brian.jms.JMSDivertDemo</mainClass>
                     <!--<mainClass>org.jboss.as.quickstarts.jms.TopicSendRecvClient</mainClass>-->
                     <systemProperties>
-                        <!-- Override the default values of properties passed to the HelloWorldJMSClientQueue -->
+                        <!-- Override the default values of properties passed to the JMSDivertDemo -->
                         <!--
                         <systemProperty>
                             <key>java.naming.provider.url</key>
