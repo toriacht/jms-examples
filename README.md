@@ -7,11 +7,27 @@ This code demonstrates using a divert to divert a JMS message from a TOPIC to a 
 ### Pre-requisites:
 1. Application Users must exist on JBoss (matching the code)
 2. Jboss must be running before executing this code
-3. Create divert by running:
+3. Queue and Topic must exist
+
+ <jms-destinations>
+                    <jms-queue name="wfsInternalEventQueue">
+                        <entry name="queue/wfsInternalEventQueue"/>
+                    </jms-queue>
+                    <jms-queue name="testQueue">
+                        <entry name="queue/testQueue"/>
+                        <entry name="java:jboss/exported/jms/queue/testQueue"/>
+                    </jms-queue>
+                    <jms-topic name="testTopic">
+                        <entry name="topic/testTopic"/>
+                        <entry name="java:jboss/exported/jms/topic/testTopic"/>
+                    </jms-topic>
+ </jms-destinations>
+
+4. Create divert by running:
 
 `[standalone@localhost:9999 /] /subsystem=messaging/hornetq-server=default/divert=my-divert:add(divert-address=jms.topic.topic1,forwarding-address=jms.queue.queue1,exclusive=true)`
 
-3. Execute code by running : `mvn clean compile exec:java`
+5. Execute code by running : `mvn clean compile exec:java`
 
 
 Divert will look like:
