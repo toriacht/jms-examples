@@ -18,7 +18,7 @@ package com.brian.jms;
 
 import com.brian.jms.queue.JMSQueue;
 import com.brian.jms.topic.JmsTopic;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 
 public class JMSDivertDemo {
@@ -36,7 +36,7 @@ public class JMSDivertDemo {
      *
      */
     private static void setUpJmsTopic() {
-        int noOfMessages = 10;
+        int noOfMessages = 5;
         log.info("Instantiating topic...............");
         JmsTopic topic = new JmsTopic();
         try {

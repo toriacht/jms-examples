@@ -102,12 +102,14 @@ public class JmsTopic {
             send = session.createPublisher(topic);
 
             TextMessage tm = session.createTextMessage(text);
-            logger.info("Publishing message: "+ tm.getText());
+            logger.info("Publishing "+noOfMessages+ " messages: "+ tm.getText());
 
             for(int i=0;i<noOfMessages;i++) {
+                System.out.println("\n");
+                logger.info("***********************************************************************");
                 logger.info("Publishing message: "+ tm.getText());
                 send.publish(tm);
-                Thread.sleep(4000);
+                Thread.sleep(2000);
             }
             logger.info("Message Published" );
             send.close();

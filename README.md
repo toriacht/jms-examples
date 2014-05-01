@@ -1,8 +1,11 @@
 ## jms-examples
 ============
 
-## INTRO
+## Intro
 This code demonstrates using a divert to divert a JMS message from a TOPIC to a QUEUE. It is based on Jboss quickstarts and docs.
+
+## Note
+This is NOT production ready. This does not properly clean up after itself etc. This is proof of concept
 
 ### Pre-requisites:
 1. Application Users must exist on JBoss (matching the code)

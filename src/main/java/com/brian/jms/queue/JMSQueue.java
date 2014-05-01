@@ -6,7 +6,7 @@ import javax.jms.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import java.util.Properties;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -111,7 +111,7 @@ public class JMSQueue {
 //                logger.info("Received message with content " + message.getText());
 //            }
         } catch (Exception e) {
-            logger.severe(e.getMessage());
+            logger.error(e.getMessage());
             throw e;
         } finally {
             if (context != null) {

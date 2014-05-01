@@ -1,10 +1,14 @@
 package com.brian.jms.listeners;
 
+
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Logger;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +19,8 @@ import java.util.logging.Logger;
  */
 public class QueueListener implements MessageListener
 {
-    private static final Logger logger = Logger.getLogger(QueueListener.class.getName());
+//    private static final Logger logger = LoggerFactory.getLogger(QueueListener.class);
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(QueueListener.class.getName());
     AtomicInteger counter = new AtomicInteger();
 
     public void onMessage(Message msg)
@@ -26,7 +31,8 @@ public class QueueListener implements MessageListener
         counter.incrementAndGet();
         try {
 
-            logger.info(" MESSAGE RECEIVED ON QUEUE LISTENER :::::::Message Content: " + tm.getText()+":::::::::::   message no: "+counter);
+            logger.info("  ::::::: MESSAGE RECEIVED ON QUEUE ::::::: Message Content: " + tm.getText()+" :::::::::::   message no: "+counter);
+//            System.out.println(" MESSAGE RECEIVED ON QUEUE LISTENER :::::::Message Content: " + tm.getText()+":::::::::::   message no: "+counter);
 
         } catch(Throwable t) {
             t.printStackTrace();
