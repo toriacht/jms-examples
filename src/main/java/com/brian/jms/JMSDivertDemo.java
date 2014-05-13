@@ -35,8 +35,8 @@ public class JMSDivertDemo {
     /**
      *
      */
-    private static void setUpJmsTopic() {
-        int noOfMessages = 5;
+    private static void setUpJmsTopic() throws InterruptedException {
+        int noOfMessages = 3;
         log.info("Instantiating topic...............");
         JmsTopic topic = new JmsTopic();
         try {
@@ -44,6 +44,12 @@ public class JMSDivertDemo {
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+
+//        for(int i=0; i<10; i++){
+//            System.out.println("Keeping JVM alive to allow message be delivered....");
+//            Thread.sleep(1000);
+//
+//        }
 
     }
 

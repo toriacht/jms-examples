@@ -109,7 +109,7 @@ public class JmsTopic {
                 logger.info("***********************************************************************");
                 logger.info("Publishing message: "+ tm.getText());
                 send.publish(tm);
-                Thread.sleep(2000);
+                Thread.sleep(5000);
             }
             logger.info("Message Published" );
             send.close();
